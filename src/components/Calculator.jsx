@@ -1,49 +1,34 @@
-import { useState } from "react";
-import { calculate } from "../engine/mathEngine";
+import Display from "./Display"
+import Keypad from "./Keypad"
+import History from "./History"
 
-export default function Calculator() {
+import { useCalculator } from "../hooks/useCalculator"
 
-  const [input,setInput] = useState("");
+export default function Calculator(){
 
-  function handleClick(value){
+ const {
+  input,
+  history,
+  addValue,
+  clear,
+  evaluateExpression
+ } = useCalculator()
 
-    if(value === "="){
-      setInput(String(calculate(input)));
-      return;
-    }
+ return(
 
-    if(value === "C"){
-      setInput("");
-      return;
-    }
+  <div className="calculator">
 
-    setInput(prev => prev + value);
-  }
+   <Display value={input}/>
 
-  const buttons = [
-    "sin(","cos(","tan(","√(",
-    "7","8","9","/",
-    "4","5","6","*",
-    "1","2","3","-",
-    "0",".","=","+"
-  ];
+   <Keypad
+    onNumber={addValue}
+    onEqual={evaluateExpression}
+    onClear={clear}
+   />
 
-  return (
-    <div className="calculator">
+   <History history={history}/>
 
-      <div className="display">{input}</div>
+  </div>
 
-      <div className="buttons">
-        {buttons.map(btn => (
-          <button
-            key={btn}
-            onClick={() => handleClick(btn)}
-          >
-            {btn}
-          </button>
-        ))}
-      </div>
-
-    </div>
-  );
+ )
 }
